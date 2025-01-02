@@ -12,7 +12,7 @@
       active-text-color="#fff"
       :default-active="active"
     >
-      <el-menu-item>
+      <el-menu-item index="0">
         <router-link to="/">
           <img
             src="@/assets/logo.png"
@@ -45,7 +45,7 @@ export default {
   },
   data() {
     return {
-      contents : this.$store.state.contents,
+      contents: this.$store.state.contents,
       isCollapse: true,
     };
   },
@@ -56,15 +56,23 @@ export default {
     active() {
       return this.$store.state.active;
     },
-  }
-  ,
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler() {
+        this.handleSelect();
+      },
+    },
+  },
   methods: {
     handleSelect() {
-      this.contents.map((content) => {
-        if (content.name === this.$route.params.name) {
-          this.active = content.id;
-        }
-      });
+      const activeContent = this.contents.find(
+        (content) => content.name === this.$route.params.name
+      );
+      if (activeContent) {
+        this.$store.commit('updateActive', activeContent.id); 
+      }
     },
   },
 };

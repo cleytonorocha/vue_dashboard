@@ -1,7 +1,7 @@
 <template>
-  <div id="content" class="w-100">
+  <div id="content" class="w-100 overflow-y-scroll">
     <navbar-component/>
-    <router-view></router-view>
+    <router-view ></router-view>
   </div>
 </template>
 

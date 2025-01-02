@@ -9,9 +9,11 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'element-ui/lib/theme-chalk/index.css';
 import '@popperjs/core';
 
+
+import locale from 'element-ui/lib/locale/lang/en'
 import ElementUI from 'element-ui';
 
-Vue.use(ElementUI);
+Vue.use(ElementUI, { locale });
 
 Vue.config.productionTip = false
 
