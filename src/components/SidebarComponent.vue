@@ -13,9 +13,10 @@
       active-text-color="#fff"
     >
       <el-menu-item index="1">
-        <router-link to="/" >
+        <router-link to="/">
           <img
             src="@/assets/logo.png"
+            id="logo"
             alt="Logo Vue"
             width="30"
             height="30"
@@ -56,5 +57,8 @@ export default {
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
+}
+#logo {
+  margin-left: -2.8px;
 }
 </style>
