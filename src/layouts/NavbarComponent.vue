@@ -9,10 +9,10 @@
 <script>
 export default {
   name: "NavbarComponent",
-  data() {
-    return {
-      rote: this.$route.name,
-    };
+  computed: {
+    rote() {
+      return this.$route.name;
+    },
   },
 };
 </script>
