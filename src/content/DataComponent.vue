@@ -9,8 +9,6 @@
       "
       stripe
       style="width: 100%; font-size: 16px"
-      max-height="250"
-      height="500"
     >
       <el-table-column prop="id" label="ID" width="100"></el-table-column>
       <el-table-column
@@ -52,74 +50,76 @@
           <el-button
             size="small"
             type="danger"
-            @click="deleteProduct(scope.row)"
+            @click="confirmDelete(scope.row)"
           >
             Delete
           </el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog
+      title="Warning"
+      :visible.sync="excludeDialog"
+      width="30%"
+      center
+    >
+      <span>Are you sure you want to delete this product?</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="excludeDialog = false">Cancel</el-button>
+        <el-button
+          type="danger"
+          @click="deleteProduct"
+        >
+          Confirm
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
-  
-  <script>
+
+<script>
+import { getAllProducts, deleteProduct as deleteProductService } from "@/service/ProductService";
+
 export default {
   name: "DataComponent",
   data() {
     return {
-      products: [
-        {
-          id: 1,
-          name: "Produto 1",
-          category: "Electronics",
-          stock: 25,
-          rating: 4.5,
-          price: 100,
-        },
-        {
-          id: 2,
-          name: "Produto 2",
-          category: "Clothing",
-          stock: 15,
-          rating: 4.0,
-          price: 200,
-        },
-        {
-          id: 3,
-          name: "Produto 3",
-          category: "Books",
-          stock: 50,
-          rating: 5.0,
-          price: 300,
-        },
-      ],
+      products: [],
       search: "",
+      excludeDialog: false,
+      productToDelete: null, 
     };
   },
+  mounted() {
+    this.loadProducts();
+  },
   methods: {
+    async loadProducts() {
+      try {
+        const data = await getAllProducts();
+        this.products = data.content;
+      } catch (error) {
+        console.error("Error loading products:", error);
+      }
+    },
     editProduct(product) {
       console.log("Edit product:", product);
-      // Lógica para editar o produto
     },
-    deleteProduct(product) {
-      console.log("Delete product:", product);
-      // Lógica para excluir o produto
-      this.products = this.products.filter((p) => p.id !== product.id);
+    confirmDelete(product) {
+      this.productToDelete = product; 
+      this.excludeDialog = true;
+    },
+    deleteProduct() {
+      if (this.productToDelete) {
+        this.products = this.products.filter(
+          (product) => product.id !== this.productToDelete.id
+        );
+        deleteProductService(this.productToDelete.id);
+        this.productToDelete = null; 
+        this.excludeDialog = false; 
+      }
     },
   },
 };
 </script>
-  
-  <style scoped>
-.container-fluid {
-  padding: 20px;
-  background-color: #f9f9f9;
-}
-.el-button {
-  margin: 0 5px;
-}
-.el-table {
-  border: 1px solid #ddd;
-}
-</style>
-  
