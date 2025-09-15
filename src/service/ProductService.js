@@ -60,3 +60,13 @@ export const deleteProduct = (productId) => {
       throw error;
     });
 };
+
+export const listCategory = () => {
+  return axios
+    .get(API_URL + '/combo/category')
+    .then((response) => response)
+    .catch((error) => {
+      console.error(`There was an error in list category`);
+      throw error;
+    });
+};
