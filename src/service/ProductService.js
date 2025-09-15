@@ -70,3 +70,13 @@ export const listCategory = () => {
       throw error;
     });
 };
+
+export const listStatus = () => {
+  return axios
+    .get(API_URL + '/combo/status')
+    .then((response) => response)
+    .catch((error) => {
+      console.error(`There was an error in list status`);
+      throw error;
+    });
+};
