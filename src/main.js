@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import VueApexCharts from 'vue-apexcharts'
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,6 +15,8 @@ import locale from 'element-ui/lib/locale/lang/en'
 import ElementUI from 'element-ui';
 
 Vue.use(ElementUI, { locale });
+Vue.use(VueApexCharts);
+Vue.component('ApexChart', VueApexCharts)
 
 Vue.config.productionTip = false
 
