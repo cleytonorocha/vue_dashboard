@@ -18,7 +18,24 @@ export default new Vuex.Store({
         icon: "el-icon-circle-plus-outline",
         prettyName: "Register",
       },
-      { id: 3, name: "data", icon: "el-icon-coin", prettyName: "Data" },
+      {
+        id: 3,
+        name: "data",
+        icon: "el-icon-coin",
+        prettyName: "Data"
+      },
+      {
+        id: 4,
+        name: "reports",
+        icon: "el-icon-tickets",
+        prettyName: "Reports"
+      },
+      {
+        id: 5,
+        name: "charts",
+        icon: "el-icon-pie-chart",
+        prettyName: "Charts",
+      },
     ],
   },
   getters: {
