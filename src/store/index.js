@@ -27,7 +27,7 @@ export default new Vuex.Store({
       {
         id: 4,
         name: "reports",
-        icon: "el-icon-tickets",
+        icon: "el-icon-document",
         prettyName: "Reports"
       },
       {
