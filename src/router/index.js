@@ -2,8 +2,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeContent from "@/content/HomeContent.vue";
 import DashboardContent from "@/content/DashboardContent.vue";
-import DataComponent from "@/content/DataComponent.vue";
-import RegisterComponent from "@/content/RegisterComponent.vue";
+import DataComponent from "@/content/DataContent.vue";
+import RegisterComponent from "@/content/RegisterContent.vue";
 
 Vue.use(VueRouter);
 
@@ -32,6 +32,7 @@ const routes = [
     path: "/data",
     component: DataComponent
   },
+
 ];
 
 const router = new VueRouter({
