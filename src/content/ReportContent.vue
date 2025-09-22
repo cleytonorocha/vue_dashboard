@@ -33,6 +33,7 @@
 import CardTemplate from "@/templates/CardTemplate.vue";
 import DialogTemplate from "@/templates/DialogTemplate.vue";
 import { listCategory, listStatus } from "@/service/ProductService";
+import { generateProductsReport } from "@/service/ReportService";
 
 export default {
   name: "ReportContent",
@@ -118,13 +119,17 @@ export default {
         config: { title: this.config[configIndex].name, width: "80%" },
       });
     },
-    async handleDialogSubmit(formData) {
+    async handleDialogSubmit(formData, type) {
       this.$refs.DialogTemplate.submitLoading = true;
-      switch (this.closeDialog) {
-        case 0:
-          break
+      try {
+        switch (this.configIndex) {
+          case 0:
+            await generateProductsReport(formData, type);
+            break;
+        }
+      } finally {
+        this.$refs.DialogTemplate.submitLoading = false;
       }
-      this.$refs.DialogTemplate.submitLoading = false;
     },
   },
 };

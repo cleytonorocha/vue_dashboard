@@ -50,10 +50,16 @@
       <div class="dialog-footer" style="text-align: right; margin-top: 1rem">
         <el-button @click="closeDialog">Cancel</el-button>
         <el-button
-          type="primary"
-          @click="handleSubmit"
+          type="success"
+          @click="handleSubmit(2)"
           v-loading.fullscreen.lock="submitLoading"
-          >Submit</el-button
+          >Excel</el-button
+        >
+        <el-button
+          type="danger"
+          @click="handleSubmit(1)"
+          v-loading.fullscreen.lock="submitLoading"
+          >PDF</el-button
         >
       </div>
     </el-form>
@@ -83,8 +89,8 @@ export default {
       this.visible = false;
       this.$emit("closeDialog");
     },
-    async handleSubmit() {
-      this.$emit("handleDialogSubmit", { ...this.formData });
+    async handleSubmit(type) {
+      this.$emit("handleDialogSubmit", { ...this.formData, type });
     },
   },
 };
