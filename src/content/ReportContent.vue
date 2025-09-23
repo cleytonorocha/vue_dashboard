@@ -11,7 +11,7 @@
         </template>
 
         <template v-slot:card-content>
-          <img src="image source" class="img-fluid rounded-top" alt="" />
+          <img src="@/assets/products.png" class="img-fluid rounded-top" :alt="item.img" />
         </template>
       </card-template>
     </div>
@@ -88,6 +88,7 @@ export default {
       defaults: [
         {
           nameHeader: "Products Report",
+          img: "@/assets/products.png",
           name: "Product 1",
           productCategory: "",
           productStatus: "",
@@ -119,12 +120,12 @@ export default {
         config: { title: this.config[configIndex].name, width: "80%" },
       });
     },
-    async handleDialogSubmit(formData, type) {
+    async handleDialogSubmit(opts) {
       this.$refs.DialogTemplate.submitLoading = true;
       try {
         switch (this.configIndex) {
           case 0:
-            await generateProductsReport(formData, type);
+            await generateProductsReport(opts.data, opts.type);
             break;
         }
       } finally {

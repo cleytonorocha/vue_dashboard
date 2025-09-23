@@ -90,7 +90,11 @@ export default {
       this.$emit("closeDialog");
     },
     async handleSubmit(type) {
-      this.$emit("handleDialogSubmit", { ...this.formData, type });
+      const opts = {
+        data: this.formData,
+        type: type,
+      };
+      this.$emit("handleDialogSubmit", opts);
     },
   },
 };
