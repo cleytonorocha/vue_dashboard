@@ -1,198 +1,181 @@
 <template>
-<div id="dashboard">
-  <!-- First Row -->
-  <div class="row d-flex justify-content-around py-4">
-    <!-- Column Chart: Products by Category -->
-    <card-template>
-      <template v-slot:card-title>
-        <h2>Products by Category</h2>
-      </template>
-      <template v-slot:card-content>
-        <apex-chart type="bar" height="300" :options="chartCategory.options" :series="chartCategory.series" />
-      </template>
-    </card-template>
+  <div id="dashboard" class="container-fluid p-4 bg-light">
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="fw-bold">📊 Product Dashboard</h1>
+        <el-select
+          v-model="selected"
+          class="w-100"
+          placeholder="Select number of products"
+          @change="handleSelection"
+        >
+          <el-option
+            v-for="option in selectionProducts"
+            :key="option"
+            :label="option + ' products'"
+            :value="option"
+          />
+        </el-select>
+        <p class="text-muted mt-2">Overview of products and categories</p>
+      </div>
+    </div>
 
-    <!-- Pie Chart: Product Status -->
-    <card-template>
-      <template v-slot:card-title>
-        <h2>Product Status</h2>
-      </template>
-      <template v-slot:card-content>
-        <apex-chart type="pie" height="300" :options="chartStatus.options" :series="chartStatus.series" />
-      </template>
-    </card-template>
+    <!-- KPIs -->
+    <div class="row text-center mb-4">
+      <div class="col-md-3 mb-3">
+        <div class="card shadow-sm border-0 p-3 bg-primary text-white">
+          <h5>Total Products</h5>
+          <h2>{{ products.length }}</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card shadow-sm border-0 p-3 bg-success text-white">
+          <h5>Active</h5>
+          <h2>{{ products.filter((p) => p.status === 'Available').length }}</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card shadow-sm border-0 p-3 bg-danger text-white">
+          <h5>Pending</h5>
+          <h2>{{ products.filter((p) => p.status === 'Pending').length }}</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card shadow-sm border-0 p-3 bg-warning text-dark">
+          <h5>Total Stock</h5>
+          <h2>{{ products.reduce((sum, p) => sum + p.stock, 0) }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row d-flex justify-content-around py-3">
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm p-3">
+          <h5 class="mb-3">Products by Category</h5>
+          <apex-chart
+            type="bar"
+            height="300"
+            :options="chartCategory.options"
+            :series="chartCategory.series"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm p-3">
+          <h5 class="mb-3">Product Status</h5>
+          <apex-chart
+            type="pie"
+            height="300"
+            :options="chartStatus.options"
+            :series="chartStatus.series"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row d-flex justify-content-around py-3">
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm p-3">
+          <h5 class="mb-3">Average Price by Category</h5>
+          <apex-chart
+            type="line"
+            height="300"
+            :options="chartPrice.options"
+            :series="chartPrice.series"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm p-3">
+          <h5 class="mb-3">Stock by Product</h5>
+          <apex-chart
+            type="bar"
+            height="300"
+            :options="chartStock.options"
+            :series="chartStock.series"
+          />
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- Second Row -->
-  <div class="row d-flex justify-content-around py-4">
-    <!-- Line Chart: Average Price by Category -->
-    <card-template>
-      <template v-slot:card-title>
-        <h2>Average Price by Category</h2>
-      </template>
-      <template v-slot:card-content>
-        <apex-chart type="line" height="300" :options="chartPrice.options" :series="chartPrice.series" />
-      </template>
-    </card-template>
-
-    <!-- Column Chart: Stock by Product -->
-    <card-template>
-      <template v-slot:card-title>
-        <h2>Stock by Product</h2>
-      </template>
-      <template v-slot:card-content>
-        <apex-chart type="bar" height="300" :options="chartStock.options" :series="chartStock.series" />
-      </template>
-    </card-template>
-  </div>
-
-  <!-- Third Row -->
-  <div class="row d-flex justify-content-around py-4">
-
-    <!-- Bubble Chart: Stock vs Price -->
-    <card-template>
-      <template v-slot:card-title>
-        <h2>Stock vs Price (Bubble)</h2>
-      </template>
-      <template v-slot:card-content>
-        <apex-chart type="bubble" height="300" :options="chartStockPriceBubble.options"
-          :series="chartStockPriceBubble.series" />
-      </template>
-    </card-template>
-
-    <!-- Treemap Chart: Products by Category -->
-    <card-template>
-      <template v-slot:card-title>
-        <h2>Products by Category (Treemap)</h2>
-      </template>
-      <template v-slot:card-content>
-        <apex-chart type="treemap" height="300" :options="chartCategoryTreemap.options"
-          :series="chartCategoryTreemap.series" />
-      </template>
-    </card-template>
-  </div>
-</div>
 </template>
 
 <script>
-import CardTemplate from "@/templates/CardTemplate.vue";
 import { getAllProducts } from "@/service/ProductService";
 
 export default {
   name: "DashboardContent",
-  components: { CardTemplate },
+  async created() {
+    this.defineProducts();
+  },
   data() {
     return {
       products: [],
-      chartsColors: "#2a9df4",
-      chartsColorsPalette: ["#2a9df4", "#f4a261", "#e76f51", "#e9c46a", "#2a9d8f"]
+      selected: 10,
+      selectionProducts: [10, 50, 100, 500],
+      pagination: {
+        page: 0,
+        linesPerPage: 10,
+        orderBy: "id",
+        direction: "ASC",
+      },
     };
+  },
+  methods: {
+    async defineProducts() {
+      const data = await getAllProducts(this.pagination);
+      this.products = data.content;
+    },
+    async handleSelection(value) {
+      this.pagination.linesPerPage = value;
+      await this.defineProducts();
+    },
   },
   computed: {
     chartCategory() {
-      const categories = [...new Set(this.products.map(p => p.category))];
-      const counts = categories.map(cat =>
-        this.products.filter(p => p.category === cat).length
+      const categories = [...new Set(this.products.map((p) => p.category))];
+      const counts = categories.map(
+        (c) => this.products.filter((p) => p.category === c).length
       );
       return {
-        options: {
-          chart: { id: "category-bar" },
-          xaxis: { categories },
-          colors: this.chartsColorsPalette,
-        },
-        series: [{ name: "Quantidade", data: counts }],
+        options: { xaxis: { categories } },
+        series: [{ name: "Count", data: counts }],
       };
     },
     chartStatus() {
-      const statuses = [...new Set(this.products.map(p => p.status))];
-      const counts = statuses.map(st =>
-        this.products.filter(p => p.status === st).length
+      const statuses = [...new Set(this.products.map((p) => p.status))];
+      const counts = statuses.map(
+        (s) => this.products.filter((p) => p.status === s).length
       );
-      return {
-        options: { labels: statuses, colors: this.chartsColorsPalette.slice(0, statuses.length) },
-        series: counts,
-      };
+      return { options: { labels: statuses }, series: counts };
     },
-
     chartPrice() {
-      const categories = [...new Set(this.products.map(p => p.category))];
-      const averages = categories.map(cat => {
-        const items = this.products.filter(p => p.category === cat);
-        return (
-          items.reduce((sum, p) => sum + parseFloat(p.price), 0) / items.length
-        );
+      const categories = [...new Set(this.products.map((p) => p.category))];
+      const averages = categories.map((c) => {
+        const items = this.products.filter((p) => p.category === c);
+        return items.reduce((s, p) => s + p.price, 0) / items.length;
       });
       return {
-        options: {
-          chart: { id: "price-line" },
-          xaxis: { categories },
-          colors: this.chartsColorsPalette,
-        },
-        series: [{ name: "Preço Médio", data: averages }],
+        options: { xaxis: { categories } },
+        series: [{ name: "Average Price", data: averages }],
       };
     },
-
-
     chartStock() {
       return {
-        options: {
-          chart: { id: "stock-bar" },
-          xaxis: { categories: this.products.map(p => p.name) },
-          colors: [this.chartsColors],
-        },
-        series: [{ name: "Estoque", data: this.products.map(p => p.stock) }],
+        options: { xaxis: { categories: this.products.map((p) => p.name) } },
+        series: [{ name: "Stock", data: this.products.map((p) => p.stock) }],
       };
     },
-
-    chartStockPriceBubble() {
-      const series = [{
-        name: 'Produtos',
-        data: this.products.map(p => ({
-          x: p.stock,
-          y: parseFloat(p.price),
-          z: p.rating
-        }))
-      }];
-      return {
-        options: {
-          chart: { id: 'stock-price-bubble', toolbar: { show: true } },
-          xaxis: { title: { text: 'Estoque' } },
-          yaxis: { title: { text: 'Preço' } },
-          title: { text: 'Estoque x Preço', align: 'center' },
-          colors: this.chartsColorsPalette
-        },
-        series
-      };
-    },
-
-    chartCategoryTreemap() {
-      const categories = [...new Set(this.products.map(p => p.category))];
-      const series = categories.map(cat => ({
-        x: cat,
-        y: this.products.filter(p => p.category === cat).length
-      }));
-      return {
-        options: {
-          chart: { id: 'category-treemap' },
-          title: { text: 'Produtos por Categoria', align: 'center' },
-          colors: this.chartsColorsPalette
-        },
-        series: [{ data: series }]
-      };
-    },
-
-  },
-  created() {
-    getAllProducts({ page: 0, size: 100 })
-      .then(data => {
-        this.products = data.content || data;
-      })
-      .catch(err => console.error("Erro ao carregar produtos", err));
   },
 };
 </script>
+
 <style>
-#dashboard{
+#dashboard {
   overflow-x: hidden;
 }
 </style>
