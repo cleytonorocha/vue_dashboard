@@ -17,10 +17,7 @@ export const getProductById = (productId) => {
     .get(`${API_URL}/${productId}`)
     .then((response) => response.data)
     .catch((error) => {
-      console.error(
-        `There was an error fetching the product with ID ${productId}!`,
-        error
-      );
+      console.error(`There was an error fetching the product with ID ${productId}!`, error);
       throw error;
     });
 };
@@ -40,10 +37,7 @@ export const updateProduct = (productId, productData) => {
     .put(`${API_URL}/${productId}`, productData)
     .then((response) => response.data)
     .catch((error) => {
-      console.error(
-        `There was an error updating the product with ID ${productId}!`,
-        error
-      );
+      console.error(`There was an error updating the product with ID ${productId}!`, error);
       throw error;
     });
 };
@@ -53,10 +47,7 @@ export const deleteProduct = (productId) => {
     .delete(`${API_URL}/${productId}`)
     .then((response) => response.data)
     .catch((error) => {
-      console.error(
-        `There was an error deleting the product with ID ${productId}!`,
-        error
-      );
+      console.error(`There was an error deleting the product with ID ${productId}!`, error);
       throw error;
     });
 };
