@@ -2,6 +2,9 @@
 
 Product dashboard front-end built with Vue — lightweight, responsive and chart-driven.
 
+<img src="./gif.gif"></img>
+
+
 > Quick, ready-to-use dashboard UI (ApexCharts) with KPIs, charts and a simple product list. Add your API URL in the `.env` files and you're ready to go.
 
 ---
