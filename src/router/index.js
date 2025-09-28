@@ -5,6 +5,7 @@ import DashboardContent from "@/content/DashboardContent.vue";
 import DataContent from "@/content/DataContent.vue";
 import RegisterContent from "@/content/RegisterContent.vue";
 import ReportContent from "@/content/ReportContent.vue"
+import ChartsContent from "@/content/ChartsContent.vue";
 
 Vue.use(VueRouter);
 
@@ -34,9 +35,14 @@ const routes = [
     component: DataContent
   },
   {
-    name: "report",
+    name: "reports",
     path: "/reports",
     component: ReportContent
+  },
+  {
+    name: "chart",
+    path: "/charts",
+    component: ChartsContent
   }
 ];
 
