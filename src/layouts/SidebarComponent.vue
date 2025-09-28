@@ -15,7 +15,7 @@
       <el-menu-item index="0">
         <router-link to="/">
           <img
-            src="@/assets/logo.png"
+            src="@/assets/logo.svg"
             id="logo"
             alt="Logo Vue"
             width="30"
